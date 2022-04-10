@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:divider="@color/purple_200"
+    android:showDividers="middle">
     <include
         android:id="@+id/first_1x3_row"
         layout="@layout/sudoku_1x3_table_row"/>

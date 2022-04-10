@@ -2,6 +2,8 @@
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:divider="@color/purple_200"
+    android:showDividers="middle"
     android:layout_weight="1">
     <com.ilovesudoku.sudokusolver.ui.main.CellView
         android:id="@+id/first_cell"
