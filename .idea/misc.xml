@@ -5,9 +5,11 @@
       <map>
         <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/layout/main_activity.xml" value="0.2128623188405797" />
         <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/layout/main_fragment.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/layout/main_grid_cell_view.xml" value="0.1875" />
         <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/layout/sudoku_1x3_table_row.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/layout/sudoku_3x3_subtable.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/layout/sudoku_3x3_table_row.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/layout/sudoku_3x9_table_row.xml" value="0.25729166666666664" />
       </map>
     </option>
   </component>
