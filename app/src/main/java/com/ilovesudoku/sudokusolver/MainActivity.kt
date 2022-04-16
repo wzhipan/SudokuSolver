@@ -1,7 +1,7 @@
 package com.ilovesudoku.sudokusolver
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.ilovesudoku.sudokusolver.ui.main.MainFragment
 
 class MainActivity : AppCompatActivity() {

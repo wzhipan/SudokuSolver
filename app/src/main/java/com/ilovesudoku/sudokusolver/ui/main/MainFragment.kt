@@ -26,8 +26,9 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        // TODO: Use the ViewModel
+        this.viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+
+        println("--------------- MainFragment onActivityCreated: viewModel created: ${viewModel.initialBoard.value?.get(0)}" )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
