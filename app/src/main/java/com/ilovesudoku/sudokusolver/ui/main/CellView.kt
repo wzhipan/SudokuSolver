@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TableLayout
 import android.widget.TextView
 import androidx.lifecycle.*
 import com.ilovesudoku.sudokusolver.R
@@ -35,7 +36,7 @@ class CellView(context: Context, attrs: AttributeSet?) :
 
         if (cellWidth == 0 || abs(measuredWidth.toDouble() / cellWidth - 1) > 0.01) {
             cellWidth = measuredWidth
-            cellHeight = (measuredWidth * 1.1).toInt()
+            cellHeight = measuredWidth
         }
 
         setMeasuredDimension(cellWidth, cellHeight)
@@ -65,10 +66,13 @@ class CellView(context: Context, attrs: AttributeSet?) :
 
     private fun updateMainCellNumber(number: Int) {
         val mainCellTextView = findViewById<TextView>(R.id.main_cell_text)
+        val candidateNumbers = findViewById<TableLayout>(R.id.candidate_numbers)
         if (number > 9 || number < 1) {
             mainCellTextView.visibility = INVISIBLE
+            candidateNumbers.visibility = VISIBLE
         } else {
             mainCellTextView.visibility = VISIBLE
+            candidateNumbers.visibility = INVISIBLE
             mainCellTextView.text = number.toString()
         }
     }

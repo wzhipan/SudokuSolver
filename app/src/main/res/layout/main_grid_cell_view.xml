@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/cell_background"
-    android:padding="4dp"
-    tools:ignore="SmallSp">
+    android:paddingBottom="2dp">
 
     <TextView
         android:id="@+id/main_cell_text"
@@ -16,67 +15,8 @@
         android:textColor="@color/teal_700"
         android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/cell_hint1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|start"
-        android:textColor="@color/black"
-        android:textSize="8sp" />
-
-    <TextView
-        android:id="@+id/cell_hint2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center"
-        android:textColor="@color/black"
-        android:textSize="8sp" />
-
-    <TextView
-        android:id="@+id/cell_hint3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:textColor="@color/black"
-        android:textSize="8sp" />
-
-    <TextView
-        android:id="@+id/cell_hint4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|center"
-        android:textColor="@color/black"
-        android:textSize="8sp" />
-
-    <TextView
-        android:id="@+id/cell_hint5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:textColor="@color/black"
-        android:textSize="8sp" />
-
-    <TextView
-        android:id="@+id/cell_hint6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:textColor="@color/black"
-        android:textSize="8sp" />
-
-    <TextView
-        android:id="@+id/cell_hint7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:textColor="@color/black"
-        android:textSize="8sp" />
-
-    <TextView
-        android:id="@+id/cell_hint8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start|center"
-        android:textColor="@color/black"
-        android:textSize="8sp" />
+    <include
+        android:id="@+id/candidate_numbers"
+        layout="@layout/cell_candidate_table"
+        android:visibility="invisible" />
 </FrameLayout>
