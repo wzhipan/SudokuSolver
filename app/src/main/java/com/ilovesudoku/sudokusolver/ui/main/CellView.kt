@@ -50,8 +50,18 @@ class CellView(context: Context, attrs: AttributeSet?) :
         val storeOwner = findViewTreeViewModelStoreOwner()
         val viewModel = storeOwner?.let { ViewModelProvider(it)[MainViewModel::class.java] }
         viewModel?.initialBoard?.observe(lifecycleOwner, Observer {
-            findViewById<TextView>(R.id.main_cell_text).text = it[cellId].toString()
+            updateMainCellNumber(it[cellId])
         })
+    }
+
+    private fun updateMainCellNumber(number: Int) {
+        val mainCellTextView = findViewById<TextView>(R.id.main_cell_text)
+        if (number > 9 || number < 1) {
+            mainCellTextView.visibility = INVISIBLE
+        } else {
+            mainCellTextView.visibility = VISIBLE
+            mainCellTextView.text = number.toString()
+        }
     }
 
     override fun onClick(v: View?) {

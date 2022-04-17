@@ -1,72 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/cell_background"
-    android:padding="4dp">
+    android:padding="4dp"
+    tools:ignore="SmallSp">
 
     <TextView
         android:id="@+id/main_cell_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/teal_700"
         android:layout_gravity="center"
-        android:textSize="16sp"/>
+        android:text="@string/main_cell_text_view_default_value"
+        android:textColor="@color/teal_700"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/cell_hint1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
         android:layout_gravity="top|start"
-        android:textSize="8sp"/>
+        android:textColor="@color/black"
+        android:textSize="8sp" />
+
     <TextView
         android:id="@+id/cell_hint2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
         android:layout_gravity="top|center"
-        android:textSize="8sp"/>
+        android:textColor="@color/black"
+        android:textSize="8sp" />
+
     <TextView
         android:id="@+id/cell_hint3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
         android:layout_gravity="top|end"
-        android:textSize="8sp"/>
+        android:textColor="@color/black"
+        android:textSize="8sp" />
+
     <TextView
         android:id="@+id/cell_hint4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
         android:layout_gravity="end|center"
-        android:textSize="8sp"/>
+        android:textColor="@color/black"
+        android:textSize="8sp" />
+
     <TextView
         android:id="@+id/cell_hint5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
         android:layout_gravity="end|bottom"
-        android:textSize="8sp"/>
+        android:textColor="@color/black"
+        android:textSize="8sp" />
+
     <TextView
         android:id="@+id/cell_hint6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
         android:layout_gravity="bottom|center"
-        android:textSize="8sp"/>
+        android:textColor="@color/black"
+        android:textSize="8sp" />
+
     <TextView
         android:id="@+id/cell_hint7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
         android:layout_gravity="bottom|start"
-        android:textSize="8sp"/>
+        android:textColor="@color/black"
+        android:textSize="8sp" />
+
     <TextView
         android:id="@+id/cell_hint8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
         android:layout_gravity="start|center"
-        android:textSize="8sp"/>
+        android:textColor="@color/black"
+        android:textSize="8sp" />
 </FrameLayout>
