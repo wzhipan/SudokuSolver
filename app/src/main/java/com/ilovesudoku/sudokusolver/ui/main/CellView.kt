@@ -51,7 +51,16 @@ class CellView(context: Context, attrs: AttributeSet?) :
         val viewModel = storeOwner?.let { ViewModelProvider(it)[MainViewModel::class.java] }
         viewModel?.initialBoard?.observe(lifecycleOwner, Observer {
             updateMainCellNumber(it[cellId])
+            if (!viewModel.cellEditable[cellId]) {
+                updateMainCellNumberColor(R.color.black)
+                isClickable = false
+            }
         })
+    }
+
+    private fun updateMainCellNumberColor(colorResId: Int) {
+        val mainCellTextView = findViewById<TextView>(R.id.main_cell_text)
+        mainCellTextView.setTextColor(resources.getColor(colorResId, null))
     }
 
     private fun updateMainCellNumber(number: Int) {
