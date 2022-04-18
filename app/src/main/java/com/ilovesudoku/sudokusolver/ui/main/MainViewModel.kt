@@ -5,12 +5,14 @@ import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
     val cellEditable: BooleanArray = BooleanArray(81)
-    val initialBoard: MutableLiveData<IntArray> =
+    val candidateValues: Array<MutableLiveData<BooleanArray>> =
+        Array(81) { MutableLiveData(BooleanArray(9) { false }) }
+    val cellValues: MutableLiveData<IntArray> =
         MutableLiveData<IntArray>().also {
-            loadInitialBoard(it)
+            loadInitialCellValues(it)
         }
 
-    private fun loadInitialBoard(mutableLiveData: MutableLiveData<IntArray>) {
+    private fun loadInitialCellValues(mutableLiveData: MutableLiveData<IntArray>) {
         val initialBoardArray = intArrayOf(
             5, 3, 0, 0, 7, 0, 0, 0, 0,
             6, 0, 0, 1, 9, 5, 0, 0, 0,
@@ -27,5 +29,30 @@ class MainViewModel : ViewModel() {
         for (i in 0..80) {
             cellEditable[i] = initialBoardArray[i] == 0
         }
+    }
+
+    fun getCellValuesAvailable(cellId: Int): BooleanArray {
+        val cellValuesAvailable = BooleanArray(9) { true }
+        val row = cellId / 9
+        val col = cellId % 9
+        val blockRow = row / 3
+        val blockCol = col / 3
+        for (i in 0..8) {
+            val rowValue = cellValues.value?.get(9 * row + i) ?: 0
+            if (rowValue in 1..9) {
+                cellValuesAvailable[rowValue - 1] = false
+            }
+            val colValue = cellValues.value?.get(9 * i + col) ?: 0
+            if (colValue in 1..9) {
+                cellValuesAvailable[colValue - 1] = false
+            }
+            val blockValue =
+                cellValues.value?.get((blockRow * 3 + i / 3) * 9 + blockCol * 3 + i % 3) ?: 0
+            if (blockValue in 1..9) {
+                cellValuesAvailable[blockValue - 1] = false
+            }
+        }
+
+        return cellValuesAvailable
     }
 }

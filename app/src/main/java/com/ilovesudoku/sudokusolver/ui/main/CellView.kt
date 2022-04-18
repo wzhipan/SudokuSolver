@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TableLayout
+import android.widget.TableRow
 import android.widget.TextView
+import androidx.core.view.get
 import androidx.lifecycle.*
 import com.ilovesudoku.sudokusolver.R
 import kotlin.math.abs
@@ -50,12 +52,16 @@ class CellView(context: Context, attrs: AttributeSet?) :
         super.onCreate(lifecycleOwner)
         val storeOwner = findViewTreeViewModelStoreOwner()
         val viewModel = storeOwner?.let { ViewModelProvider(it)[MainViewModel::class.java] }
-        viewModel?.initialBoard?.observe(lifecycleOwner, Observer {
-            updateMainCellNumber(it[cellId])
+            ?: return
+        viewModel.cellValues.observe(lifecycleOwner, Observer {
+            refreshCellView(viewModel)
             if (!viewModel.cellEditable[cellId]) {
                 updateMainCellNumberColor(R.color.black)
                 isClickable = false
             }
+        })
+        viewModel.candidateValues[cellId].observe(lifecycleOwner, Observer {
+            refreshCandidateNumbersView(viewModel)
         })
     }
 
@@ -64,16 +70,28 @@ class CellView(context: Context, attrs: AttributeSet?) :
         mainCellTextView.setTextColor(resources.getColor(colorResId, null))
     }
 
-    private fun updateMainCellNumber(number: Int) {
+    private fun refreshCellView(viewModel: MainViewModel) {
+        val mainCellNumber = viewModel.cellValues.value?.get(cellId) ?: 0
         val mainCellTextView = findViewById<TextView>(R.id.main_cell_text)
-        val candidateNumbers = findViewById<TableLayout>(R.id.candidate_numbers)
-        if (number > 9 || number < 1) {
+        if (mainCellNumber > 9 || mainCellNumber < 1) {
             mainCellTextView.visibility = INVISIBLE
-            candidateNumbers.visibility = VISIBLE
         } else {
             mainCellTextView.visibility = VISIBLE
-            candidateNumbers.visibility = INVISIBLE
-            mainCellTextView.text = number.toString()
+            mainCellTextView.text = mainCellNumber.toString()
+        }
+        refreshCandidateNumbersView(viewModel)
+    }
+
+    private fun refreshCandidateNumbersView(viewModel: MainViewModel) {
+        val mainCellNumber = viewModel.cellValues.value?.get(cellId) ?: 0
+        val candidateNumbersView = findViewById<TableLayout>(R.id.candidate_numbers)
+        candidateNumbersView.visibility =
+            if (mainCellNumber > 9 || mainCellNumber < 1) VISIBLE else INVISIBLE
+        val cellValuesAvailable = viewModel.getCellValuesAvailable(cellId)
+        for (i in 0..8) {
+            val tableRow = candidateNumbersView[i / 3] as TableRow
+            val textView = tableRow[i % 3]
+            textView.visibility = if (cellValuesAvailable[i]) VISIBLE else INVISIBLE
         }
     }
 
