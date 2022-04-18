@@ -32,6 +32,7 @@ class CellView(context: Context, attrs: AttributeSet?) :
     }
 
     var cellId: Int = -1
+    private var prevMainCellTextColor: Int? = null
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -50,9 +51,7 @@ class CellView(context: Context, attrs: AttributeSet?) :
 
     override fun onCreate(lifecycleOwner: LifecycleOwner) {
         super.onCreate(lifecycleOwner)
-        val storeOwner = findViewTreeViewModelStoreOwner()
-        val viewModel = storeOwner?.let { ViewModelProvider(it)[MainViewModel::class.java] }
-            ?: return
+        val viewModel = getViewModel() ?: return
         viewModel.cellValues.observe(lifecycleOwner, Observer {
             refreshCellView(viewModel)
             if (!viewModel.cellEditable[cellId]) {
@@ -63,6 +62,14 @@ class CellView(context: Context, attrs: AttributeSet?) :
         viewModel.candidateValues[cellId].observe(lifecycleOwner, Observer {
             refreshCandidateNumbersView(viewModel)
         })
+        viewModel.selectedCell.observe(
+            lifecycleOwner,
+            Observer { handleCellViewSelected(viewModel) })
+    }
+
+    private fun getViewModel(): MainViewModel? {
+        val storeOwner = findViewTreeViewModelStoreOwner()
+        return storeOwner?.let { ViewModelProvider(it)[MainViewModel::class.java] }
     }
 
     private fun updateMainCellNumberColor(colorResId: Int) {
@@ -95,7 +102,37 @@ class CellView(context: Context, attrs: AttributeSet?) :
         }
     }
 
+    private fun handleCellViewSelected(viewModel: MainViewModel) {
+        if (viewModel.selectedCell.value == cellId) {
+            setBackgroundColor(
+                resources.getColor(
+                    R.color.cell_selected_background,
+                    null
+                )
+            )
+        } else {
+            setBackgroundColor(0)
+        }
+        val mainCellTextView = findViewById<TextView>(R.id.main_cell_text)
+        if (viewModel.isRelatedCellSelected(cellId)) {
+            if (prevMainCellTextColor == null) {
+                prevMainCellTextColor = mainCellTextView.currentTextColor
+            }
+            mainCellTextView.setTextColor(
+                resources.getColor(
+                    R.color.related_cell_selected_text_color,
+                    null
+                )
+            )
+        } else if (prevMainCellTextColor != null) {
+            mainCellTextView.setTextColor(prevMainCellTextColor!!)
+            prevMainCellTextColor = null
+        }
+    }
+
     override fun onClick(v: View?) {
-        println("--------------- cell Clicked: $cellId")
+        println("--------------- cell Clicked: ${cellId / 9}:${cellId % 9}")
+        val viewModel = getViewModel() ?: return
+        viewModel.selectedCell.value = cellId
     }
 }

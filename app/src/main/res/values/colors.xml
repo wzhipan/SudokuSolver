@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="cell_pressed_background">#FF999999</color>
     <color name="candidate_number_color">#FF888888</color>
+    <color name="cell_selected_background">#FF224488</color>
+    <color name="related_cell_selected_text_color">#FF18AA22</color>
 </resources>

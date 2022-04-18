@@ -11,6 +11,7 @@ class MainViewModel : ViewModel() {
         MutableLiveData<IntArray>().also {
             loadInitialCellValues(it)
         }
+    val selectedCell: MutableLiveData<Int> = MutableLiveData()
 
     private fun loadInitialCellValues(mutableLiveData: MutableLiveData<IntArray>) {
         val initialBoardArray = intArrayOf(
@@ -54,5 +55,20 @@ class MainViewModel : ViewModel() {
         }
 
         return cellValuesAvailable
+    }
+
+    fun isRelatedCellSelected(currentCellId: Int): Boolean {
+        val selectedCellId = selectedCell.value ?: return false
+        return isRelatedCell(currentCellId, selectedCellId)
+    }
+
+    private fun isRelatedCell(cellId: Int, compareCellId: Int): Boolean {
+        val cellRow = cellId / 9
+        val compareCellRow = compareCellId / 9
+        val cellCol = cellId % 9
+        val compareCellCol = compareCellId % 9
+        return cellRow == compareCellRow ||
+                cellCol == compareCellCol ||
+                (cellRow / 3 == compareCellRow / 3 && cellCol / 3 == compareCellCol / 3)
     }
 }
