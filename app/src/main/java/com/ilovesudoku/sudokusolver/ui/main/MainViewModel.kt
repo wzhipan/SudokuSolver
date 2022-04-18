@@ -34,23 +34,12 @@ class MainViewModel : ViewModel() {
 
     fun getCellValuesAvailable(cellId: Int): BooleanArray {
         val cellValuesAvailable = BooleanArray(9) { true }
-        val row = cellId / 9
-        val col = cellId % 9
-        val blockRow = row / 3
-        val blockCol = col / 3
-        for (i in 0..8) {
-            val rowValue = cellValues.value?.get(9 * row + i) ?: 0
-            if (rowValue in 1..9) {
-                cellValuesAvailable[rowValue - 1] = false
-            }
-            val colValue = cellValues.value?.get(9 * i + col) ?: 0
-            if (colValue in 1..9) {
-                cellValuesAvailable[colValue - 1] = false
-            }
-            val blockValue =
-                cellValues.value?.get((blockRow * 3 + i / 3) * 9 + blockCol * 3 + i % 3) ?: 0
-            if (blockValue in 1..9) {
-                cellValuesAvailable[blockValue - 1] = false
+        for (i in 0..80) {
+            if (isRelatedCell(cellId, i)) {
+                val number = cellValues.value?.get(i) ?: 0
+                if (number in 1..9) {
+                    cellValuesAvailable[number - 1] = false
+                }
             }
         }
 
@@ -62,7 +51,10 @@ class MainViewModel : ViewModel() {
         return isRelatedCell(currentCellId, selectedCellId)
     }
 
-    private fun isRelatedCell(cellId: Int, compareCellId: Int): Boolean {
+    private fun isRelatedCell(cellId: Int, compareCellId: Int?): Boolean {
+        if (compareCellId == null) {
+            return false
+        }
         val cellRow = cellId / 9
         val compareCellRow = compareCellId / 9
         val cellCol = cellId % 9
