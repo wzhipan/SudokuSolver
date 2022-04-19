@@ -103,16 +103,7 @@ class CellView(context: Context, attrs: AttributeSet?) :
     }
 
     private fun handleCellViewSelected(viewModel: MainViewModel) {
-        if (viewModel.selectedCell.value == cellId) {
-            setBackgroundColor(
-                resources.getColor(
-                    R.color.cell_selected_background,
-                    null
-                )
-            )
-        } else {
-            setBackgroundColor(0)
-        }
+        updateCellBackground(viewModel)
         val mainCellTextView = findViewById<TextView>(R.id.main_cell_text)
         if (viewModel.isRelatedCellSelected(cellId)) {
             if (prevMainCellTextColor == null) {
@@ -127,6 +118,30 @@ class CellView(context: Context, attrs: AttributeSet?) :
         } else if (prevMainCellTextColor != null) {
             mainCellTextView.setTextColor(prevMainCellTextColor!!)
             prevMainCellTextColor = null
+        }
+    }
+
+    private fun updateCellBackground(viewModel: MainViewModel) {
+        when {
+            viewModel.selectedCell.value == cellId -> {
+                setBackgroundColor(
+                    resources.getColor(
+                        R.color.cell_selected_background,
+                        null
+                    )
+                )
+            }
+            viewModel.isRelatedCellSelected(cellId) -> {
+                setBackgroundColor(
+                    resources.getColor(
+                        R.color.related_cell_selected_background_color,
+                        null
+                    )
+                )
+            }
+            else -> {
+                setBackgroundColor(0)
+            }
         }
     }
 

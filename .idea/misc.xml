@@ -6,6 +6,8 @@
         <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/drawable/cell_background.xml" value="0.1815" />
         <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1815" />
         <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/drawable/sudoku_3x3_divider.xml" value="0.1815" />
+        <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/layout-v26/cell_candidate_table.xml" value="0.1" />
+        <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/layout-v26/main_grid_cell_view.xml" value="0.1" />
         <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/layout/cell_candidate_table.xml" value="0.2484375" />
         <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/layout/main_activity.xml" value="0.2128623188405797" />
         <entry key="..\:/Users/Zhipan/AndroidStudioProjects/SudokuSolver/app/src/main/res/layout/main_fragment.xml" value="0.36614583333333334" />

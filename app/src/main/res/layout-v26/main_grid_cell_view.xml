@@ -7,12 +7,16 @@
 
     <TextView
         android:id="@+id/main_cell_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:autoSizeMaxTextSize="32sp"
+        android:autoSizeMinTextSize="16sp"
+        android:autoSizeStepGranularity="2sp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
         android:text="@string/main_cell_text_view_default_value"
-        android:textColor="@color/teal_700"
-        android:textSize="16sp" />
+        android:textAlignment="center"
+        android:textColor="@color/teal_700" />
 
     <include
         android:id="@+id/candidate_numbers"

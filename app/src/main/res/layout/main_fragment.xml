@@ -15,10 +15,10 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
-        android:orientation="vertical"
-        android:divider="@color/black"
-        android:showDividers="middle"
         android:background="@drawable/main_table_border"
+        android:divider="@color/black"
+        android:orientation="vertical"
+        android:showDividers="middle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,22 +26,24 @@
 
         <include
             android:id="@+id/first_3x9_table_row"
+            layout="@layout/sudoku_3x9_table_row"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            layout="@layout/sudoku_3x9_table_row"/>
+            android:layout_weight="1" />
+
         <include
             android:id="@+id/second_3x9_table_row"
+            layout="@layout/sudoku_3x9_table_row"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            layout="@layout/sudoku_3x9_table_row"/>
+            android:layout_weight="1" />
+
         <include
             android:id="@+id/third_3x9_table_row"
+            layout="@layout/sudoku_3x9_table_row"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            layout="@layout/sudoku_3x9_table_row"/>
+            android:layout_weight="1" />
     </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
