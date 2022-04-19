@@ -12,4 +12,16 @@
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/candidate_number_color</item>
     </style>
+
+    <style name="key_pad_button_style" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="autoSizeMaxTextSize">48sp</item>
+        <item name="autoSizeMinTextSize">18sp</item>
+        <item name="autoSizeStepGranularity">2sp</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/key_pad_number_color</item>
+    </style>
 </resources>
