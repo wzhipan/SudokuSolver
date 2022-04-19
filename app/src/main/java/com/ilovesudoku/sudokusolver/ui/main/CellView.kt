@@ -32,7 +32,6 @@ class CellView(context: Context, attrs: AttributeSet?) :
     }
 
     var cellId: Int = -1
-    private var prevMainCellTextColor: Int? = null
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -54,8 +53,8 @@ class CellView(context: Context, attrs: AttributeSet?) :
         val viewModel = getViewModel() ?: return
         viewModel.cellValues.observe(lifecycleOwner, Observer {
             refreshCellView(viewModel)
+            updateMainCellValueTextColor(viewModel)
             if (!viewModel.cellEditable[cellId]) {
-                updateMainCellNumberColor(R.color.black)
                 isClickable = false
             }
         })
@@ -70,11 +69,6 @@ class CellView(context: Context, attrs: AttributeSet?) :
     private fun getViewModel(): MainViewModel? {
         val storeOwner = findViewTreeViewModelStoreOwner()
         return storeOwner?.let { ViewModelProvider(it)[MainViewModel::class.java] }
-    }
-
-    private fun updateMainCellNumberColor(colorResId: Int) {
-        val mainCellTextView = findViewById<TextView>(R.id.main_cell_text)
-        mainCellTextView.setTextColor(resources.getColor(colorResId, null))
     }
 
     private fun refreshCellView(viewModel: MainViewModel) {
@@ -104,21 +98,29 @@ class CellView(context: Context, attrs: AttributeSet?) :
 
     private fun handleCellViewSelected(viewModel: MainViewModel) {
         updateCellBackground(viewModel)
+        updateMainCellValueTextColor(viewModel)
+    }
+
+    private fun updateMainCellValueTextColor(viewModel: MainViewModel) {
         val mainCellTextView = findViewById<TextView>(R.id.main_cell_text)
-        if (viewModel.isRelatedCellSelected(cellId)) {
-            if (prevMainCellTextColor == null) {
-                prevMainCellTextColor = mainCellTextView.currentTextColor
+        val textColorResId: Int = when {
+            viewModel.isRelatedCellSelected(cellId) -> {
+                R.color.related_cell_selected_text_color
             }
-            mainCellTextView.setTextColor(
-                resources.getColor(
-                    R.color.related_cell_selected_text_color,
-                    null
-                )
-            )
-        } else if (prevMainCellTextColor != null) {
-            mainCellTextView.setTextColor(prevMainCellTextColor!!)
-            prevMainCellTextColor = null
+            viewModel.cellEditable[cellId] -> {
+                R.color.editable_cell_text_color
+            }
+            else -> {
+                R.color.uneditable_cell_text_color
+            }
         }
+
+        mainCellTextView.setTextColor(
+            resources.getColor(
+                textColorResId,
+                null
+            )
+        )
     }
 
     private fun updateCellBackground(viewModel: MainViewModel) {

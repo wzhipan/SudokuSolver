@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/main_cell_text_view_default_value"
-        android:textColor="@color/teal_700"
+        android:textColor="@color/editable_cell_text_color"
         android:textSize="16sp" />
 
     <include
