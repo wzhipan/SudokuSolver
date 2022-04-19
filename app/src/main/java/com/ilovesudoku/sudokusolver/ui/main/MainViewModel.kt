@@ -63,4 +63,10 @@ class MainViewModel : ViewModel() {
                 cellCol == compareCellCol ||
                 (cellRow / 3 == compareCellRow / 3 && cellCol / 3 == compareCellCol / 3)
     }
+
+    fun onNumberPadClick(numberClicked: Int) {
+        val cellValuesToUpdate = cellValues.value ?: return
+        cellValuesToUpdate[selectedCell.value ?: return] = numberClicked
+        cellValues.value = cellValuesToUpdate
+    }
 }
