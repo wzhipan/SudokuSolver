@@ -51,8 +51,18 @@ class MainViewModel : ViewModel() {
         return isRelatedCell(currentCellId, selectedCellId)
     }
 
+    fun isNumberUsedByRelatedCell(cellId: Int) : Boolean {
+        val cellNum = cellValues.value?.get(cellId) ?: return false
+        for (i in 0..80) {
+            if (isRelatedCell(cellId, i) && cellNum == cellValues.value?.get(i) ) {
+                return true
+            }
+        }
+        return false
+    }
+
     private fun isRelatedCell(cellId: Int, compareCellId: Int?): Boolean {
-        if (compareCellId == null) {
+        if (compareCellId == null || cellId == compareCellId) {
             return false
         }
         val cellRow = cellId / 9

@@ -104,8 +104,8 @@ class CellView(context: Context, attrs: AttributeSet?) :
     private fun updateMainCellValueTextColor(viewModel: MainViewModel) {
         val mainCellTextView = findViewById<TextView>(R.id.main_cell_text)
         val textColorResId: Int = when {
-            viewModel.isRelatedCellSelected(cellId) -> {
-                R.color.related_cell_selected_text_color
+            viewModel.isNumberUsedByRelatedCell(cellId) -> {
+                R.color.error_number_used_by_related_cell_text_color
             }
             viewModel.cellEditable[cellId] -> {
                 R.color.editable_cell_text_color
