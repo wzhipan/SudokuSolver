@@ -4,7 +4,7 @@
     <style name="main_cell_text_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center</item>
         <item name="android:text">@string/main_cell_text_view_default_value</item>
         <item name="android:textColor">@color/editable_cell_text_color</item>
         <item name="android:textSize">16sp</item>

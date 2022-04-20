@@ -107,6 +107,9 @@ class CellView(context: Context, attrs: AttributeSet?) :
             viewModel.isNumberUsedByRelatedCell(cellId) -> {
                 R.color.error_number_used_by_related_cell_text_color
             }
+            viewModel.isSameNumberAsSelectedCell(cellId) -> {
+                R.color.same_number_as_selected_cell_text_color
+            }
             viewModel.cellEditable[cellId] -> {
                 R.color.editable_cell_text_color
             }

@@ -96,4 +96,11 @@ class MainViewModel : ViewModel() {
             cellValues.value = cellValuesToUpdate
         }
     }
+
+    fun isSameNumberAsSelectedCell(cellId: Int): Boolean {
+        val selectedCellId = selectedCell.value ?: return false
+        return selectedCellId != cellId && cellValues.value?.get(cellId) == cellValues.value?.get(
+            selectedCellId
+        )
+    }
 }

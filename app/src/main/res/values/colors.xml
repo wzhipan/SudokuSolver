@@ -16,4 +16,5 @@
     <color name="editable_cell_text_color">#FF018786</color>
     <color name="uneditable_cell_text_color">@color/black</color>
     <color name="action_button_text_color">#FF444444</color>
+    <color name="same_number_as_selected_cell_text_color">#FF18AA22</color>
 </resources>
