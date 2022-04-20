@@ -15,4 +15,5 @@
     <color name="related_cell_selected_background_color">#66AFEEEE</color>
     <color name="editable_cell_text_color">#FF018786</color>
     <color name="uneditable_cell_text_color">@color/black</color>
+    <color name="action_button_text_color">#FF444444</color>
 </resources>

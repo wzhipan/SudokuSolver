@@ -88,7 +88,7 @@ class CellView(context: Context, attrs: AttributeSet?) :
         val candidateNumbersView = findViewById<TableLayout>(R.id.candidate_numbers)
         candidateNumbersView.visibility =
             if (mainCellNumber > 9 || mainCellNumber < 1) VISIBLE else INVISIBLE
-        val cellValuesAvailable = viewModel.getCellValuesAvailable(cellId)
+        val cellValuesAvailable = viewModel.getCandidateValues(cellId)
         for (i in 0..8) {
             val tableRow = candidateNumbersView[i / 3] as TableRow
             val textView = tableRow[i % 3]

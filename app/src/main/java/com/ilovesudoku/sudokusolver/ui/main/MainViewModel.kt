@@ -12,6 +12,7 @@ class MainViewModel : ViewModel() {
             loadInitialCellValues(it)
         }
     val selectedCell: MutableLiveData<Int> = MutableLiveData()
+    val notesTakingMode: MutableLiveData<Boolean> = MutableLiveData(false)
 
     private fun loadInitialCellValues(mutableLiveData: MutableLiveData<IntArray>) {
         val initialBoardArray = intArrayOf(
@@ -46,6 +47,12 @@ class MainViewModel : ViewModel() {
         return cellValuesAvailable
     }
 
+    fun getCandidateValues(cellId: Int): BooleanArray {
+        val candidateValues = candidateValues[cellId].value ?: BooleanArray(9) { false }
+        val availableValues = getCellValuesAvailable(cellId)
+        return candidateValues.onEachIndexed { i, value -> value && availableValues[i] }
+    }
+
     fun isRelatedCellSelected(currentCellId: Int): Boolean {
         val selectedCellId = selectedCell.value ?: return false
         return isRelatedCell(currentCellId, selectedCellId)
@@ -75,8 +82,18 @@ class MainViewModel : ViewModel() {
     }
 
     fun onNumberPadClick(numberClicked: Int) {
-        val cellValuesToUpdate = cellValues.value ?: return
-        cellValuesToUpdate[selectedCell.value ?: return] = numberClicked
-        cellValues.value = cellValuesToUpdate
+        if (notesTakingMode.value == true) {
+            val selectedCellId = selectedCell.value ?: -1
+            if (selectedCellId in 0..80) {
+                val candidateNumbers =
+                    candidateValues[selectedCellId].value ?: BooleanArray(9) { false }
+                candidateNumbers[numberClicked - 1] = true
+                candidateValues[selectedCellId].value = candidateNumbers
+            }
+        } else {
+            val cellValuesToUpdate = cellValues.value ?: return
+            cellValuesToUpdate[selectedCell.value ?: return] = numberClicked
+            cellValues.value = cellValuesToUpdate
+        }
     }
 }

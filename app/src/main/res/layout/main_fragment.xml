@@ -87,4 +87,21 @@
             android:text="@string/number_9" />
     </TableRow>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/note_taking_state_button"
+            style="@style/action_button_style"
+            android:drawableTop="@drawable/ic_baseline_edit_off_24"
+            android:text="@string/notes_button_text" />
+
+    </LinearLayout>
+
 </LinearLayout>
