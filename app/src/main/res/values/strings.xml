@@ -11,4 +11,6 @@
     <string name="number_8">8</string>
     <string name="number_9">9</string>
     <string name="notes_button_text">Notes</string>
+    <string name="undo_button_text">Undo</string>
+    <string name="redo_button_text">Redo</string>
 </resources>
