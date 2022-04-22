@@ -54,16 +54,13 @@ class CellView(context: Context, attrs: AttributeSet?) :
         viewModel.cellValues.observe(lifecycleOwner, Observer {
             refreshCellView(viewModel)
             updateMainCellValueTextColor(viewModel)
-            if (!viewModel.cellEditable[cellId]) {
-                isClickable = false
-            }
         })
         viewModel.candidateValues[cellId].observe(lifecycleOwner, Observer {
             refreshCandidateNumbersView(viewModel)
         })
-        viewModel.selectedCell.observe(
-            lifecycleOwner,
-            Observer { handleCellViewSelected(viewModel) })
+        viewModel.observeSelectedCell(
+            lifecycleOwner
+        ) { handleCellViewSelected(viewModel) }
     }
 
     private fun getViewModel(): MainViewModel? {
@@ -128,7 +125,7 @@ class CellView(context: Context, attrs: AttributeSet?) :
 
     private fun updateCellBackground(viewModel: MainViewModel) {
         when {
-            viewModel.selectedCell.value == cellId -> {
+            viewModel.isSelectedCell(cellId) -> {
                 setBackgroundColor(
                     resources.getColor(
                         R.color.cell_selected_background,
@@ -153,6 +150,6 @@ class CellView(context: Context, attrs: AttributeSet?) :
     override fun onClick(v: View?) {
         println("--------------- cell Clicked: ${cellId / 9}:${cellId % 9}")
         val viewModel = getViewModel() ?: return
-        viewModel.selectedCell.value = cellId
+        viewModel.setSelectedCell(cellId)
     }
 }

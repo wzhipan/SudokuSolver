@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.TableLayout
 import android.widget.TableRow
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.forEach
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -58,6 +59,9 @@ class MainFragment : Fragment() {
             numberPad[i].setOnClickListener {
                 viewModel.onNumberPadClick(i + 1)
             }
+        }
+        viewModel.isNumPadEnabled.observe(viewLifecycleOwner) { isEnabled ->
+            numberPad.forEach { it.isEnabled = isEnabled }
         }
     }
 

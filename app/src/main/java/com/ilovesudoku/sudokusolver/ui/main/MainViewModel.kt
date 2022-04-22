@@ -1,6 +1,8 @@
 package com.ilovesudoku.sudokusolver.ui.main
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
@@ -11,12 +13,14 @@ class MainViewModel : ViewModel() {
         MutableLiveData<IntArray>().also {
             loadInitialCellValues(it)
         }
-    val selectedCell: MutableLiveData<Int> = MutableLiveData()
     val notesTakingMode: MutableLiveData<Boolean> = MutableLiveData(false)
     val undoStackLiveData: MutableLiveData<ArrayDeque<EditEvent>> =
         MutableLiveData(ArrayDeque())
     val redoStackLiveData: MutableLiveData<ArrayDeque<EditEvent>> =
         MutableLiveData(ArrayDeque())
+    val isNumPadEnabled: MutableLiveData<Boolean> = MutableLiveData(false)
+
+    private val selectedCell: MutableLiveData<Int> = MutableLiveData()
 
     private fun loadInitialCellValues(mutableLiveData: MutableLiveData<IntArray>) {
         val initialBoardArray = intArrayOf(
@@ -37,7 +41,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun getCellValuesAvailable(cellId: Int): BooleanArray {
+    private fun getCellValuesAvailable(cellId: Int): BooleanArray {
         val cellValuesAvailable = BooleanArray(9) { true }
         for (i in 0..80) {
             if (isRelatedCell(cellId, i)) {
@@ -86,7 +90,8 @@ class MainViewModel : ViewModel() {
     }
 
     fun onNumberPadClick(numberClicked: Int) {
-        val selectedCellId = selectedCell.value ?: -1
+        val selectedCellId = selectedCell.value ?: return
+        if (!cellEditable[selectedCellId]) return
         if (notesTakingMode.value == true) {
             if (fillCandidateNumber(selectedCellId, numberClicked)) {
                 addUndoEvent(
@@ -223,8 +228,21 @@ class MainViewModel : ViewModel() {
         )
     }
 
-    fun selectedCellHasMainCellNumber(): Boolean {
+    fun isSelectedCell(cellId: Int): Boolean {
+        return cellId == selectedCell.value
+    }
+
+    private fun selectedCellHasMainCellNumber(): Boolean {
         val selectedCellId = selectedCell.value
         return selectedCellId == null || cellValues.value?.get(selectedCellId) != 0
+    }
+
+    fun observeSelectedCell(owner: LifecycleOwner, observer: Observer<Int>) {
+        selectedCell.observe(owner, observer)
+    }
+
+    fun setSelectedCell(cellId: Int) {
+        selectedCell.value = cellId
+        isNumPadEnabled.value = cellEditable[cellId]
     }
 }
