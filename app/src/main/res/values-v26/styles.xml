@@ -35,5 +35,6 @@
         <item name="autoSizeTextType">uniform</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/key_pad_number_color</item>
+        <item name="android:padding">1dp</item>
     </style>
 </resources>
