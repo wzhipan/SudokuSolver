@@ -19,8 +19,10 @@ class MainFragment : Fragment() {
         fun newInstance() = MainFragment()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         return inflater.inflate(R.layout.main_fragment, container, false)
     }
 
@@ -29,6 +31,8 @@ class MainFragment : Fragment() {
         assignIdsToCells(view)
         setupNumberPad(view)
         setupNotesTakingButton(view)
+        setupUndoButton(view)
+        setupRedoButton(view)
     }
 
     private fun assignIdsToCells(view: View) {
@@ -52,7 +56,7 @@ class MainFragment : Fragment() {
         val numberPad = view.findViewById<TableRow>(R.id.number_key_pad)
         for (i in 0..8) {
             numberPad[i].setOnClickListener {
-                viewModel.onNumberPadClick(i+1)
+                viewModel.onNumberPadClick(i + 1)
             }
         }
     }
@@ -78,6 +82,24 @@ class MainFragment : Fragment() {
         notesTakingButton.setOnClickListener {
             viewModel.notesTakingMode.value = !viewModel.notesTakingMode.value!!
         }
+    }
+
+    private fun setupUndoButton(view: View) {
+        val viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        val undoButton = (view.findViewById<Button>(R.id.undo_button))
+        viewModel.undoStackLiveData.observe(viewLifecycleOwner) {
+            undoButton.isEnabled = !it.isEmpty()
+        }
+        undoButton.setOnClickListener { viewModel.undo() }
+    }
+
+    private fun setupRedoButton(view: View) {
+        val viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        val redoButton = (view.findViewById<Button>(R.id.redo_button))
+        viewModel.redoStackLiveData.observe(viewLifecycleOwner) {
+            redoButton.isEnabled = !it.isEmpty()
+        }
+        redoButton.setOnClickListener { viewModel.redo() }
     }
 
 }

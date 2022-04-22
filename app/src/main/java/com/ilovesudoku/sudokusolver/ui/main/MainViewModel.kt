@@ -13,6 +13,10 @@ class MainViewModel : ViewModel() {
         }
     val selectedCell: MutableLiveData<Int> = MutableLiveData()
     val notesTakingMode: MutableLiveData<Boolean> = MutableLiveData(false)
+    val undoStackLiveData: MutableLiveData<ArrayDeque<EditEvent>> =
+        MutableLiveData(ArrayDeque())
+    val redoStackLiveData: MutableLiveData<ArrayDeque<EditEvent>> =
+        MutableLiveData(ArrayDeque())
 
     private fun loadInitialCellValues(mutableLiveData: MutableLiveData<IntArray>) {
         val initialBoardArray = intArrayOf(
@@ -58,10 +62,10 @@ class MainViewModel : ViewModel() {
         return isRelatedCell(currentCellId, selectedCellId)
     }
 
-    fun isNumberUsedByRelatedCell(cellId: Int) : Boolean {
+    fun isNumberUsedByRelatedCell(cellId: Int): Boolean {
         val cellNum = cellValues.value?.get(cellId) ?: return false
         for (i in 0..80) {
-            if (isRelatedCell(cellId, i) && cellNum == cellValues.value?.get(i) ) {
+            if (isRelatedCell(cellId, i) && cellNum == cellValues.value?.get(i)) {
                 return true
             }
         }
@@ -82,19 +86,134 @@ class MainViewModel : ViewModel() {
     }
 
     fun onNumberPadClick(numberClicked: Int) {
+        val selectedCellId = selectedCell.value ?: -1
         if (notesTakingMode.value == true) {
-            val selectedCellId = selectedCell.value ?: -1
-            if (selectedCellId in 0..80) {
-                val candidateNumbers =
-                    candidateValues[selectedCellId].value ?: BooleanArray(9) { false }
-                candidateNumbers[numberClicked - 1] = true
-                candidateValues[selectedCellId].value = candidateNumbers
+            if (fillCandidateNumber(selectedCellId, numberClicked)) {
+                addUndoEvent(
+                    EditEvent(
+                        EditEventType.FILL,
+                        EditValueType.CANDIDATE_NUMBER,
+                        selectedCellId,
+                        numberClicked
+                    )
+                )
             }
         } else {
-            val cellValuesToUpdate = cellValues.value ?: return
-            cellValuesToUpdate[selectedCell.value ?: return] = numberClicked
-            cellValues.value = cellValuesToUpdate
+            val oldValue = cellValues.value?.get(selectedCellId)
+            if (fillMainCellNumber(selectedCellId, numberClicked)) {
+                addUndoEvent(
+                    EditEvent(
+                        EditEventType.FILL,
+                        EditValueType.MAIN_CELL_NUMBER,
+                        selectedCellId,
+                        numberClicked,
+                        oldValue
+                    )
+                )
+            }
         }
+    }
+
+    private fun addUndoEvent(undoEvent: EditEvent) {
+        val undoStack = undoStackLiveData.value ?: ArrayDeque()
+        undoStack.addLast(undoEvent)
+        undoStackLiveData.value = undoStack
+        //reset redo stack
+        redoStackLiveData.value = ArrayDeque()
+    }
+
+    private fun fillCandidateNumber(selectedCellId: Int, numberToFill: Int): Boolean {
+        if (selectedCellId in 0..80) {
+            val candidateNumbers =
+                candidateValues[selectedCellId].value ?: BooleanArray(9) { false }
+            // no need to fill if the candidate number is already set
+            if (candidateNumbers[numberToFill - 1]) {
+                return false
+            }
+            candidateNumbers[numberToFill - 1] = true
+            candidateValues[selectedCellId].value = candidateNumbers
+            return true
+        }
+        return false
+    }
+
+    private fun deleteCandidateNumber(selectedCellId: Int, numberToDelete: Int): Boolean {
+        if (selectedCellId in 0..80) {
+            val candidateNumbers =
+                candidateValues[selectedCellId].value ?: return false
+            // no need to delete if the candidate number is not set
+            if (!candidateNumbers[numberToDelete - 1]) {
+                return false
+            }
+            candidateNumbers[numberToDelete - 1] = false
+            candidateValues[selectedCellId].value = candidateNumbers
+            return true
+        }
+        return false
+    }
+
+    private fun fillMainCellNumber(selectedCellId: Int, numberToFill: Int): Boolean {
+        if (selectedCellId !in 0..80) {
+            return false
+        }
+        val cellValuesToUpdate = cellValues.value ?: return false
+        // no need to fill if the main cell number equals to the number to fill
+        if (cellValuesToUpdate[selectedCellId] == numberToFill) {
+            return false
+        }
+        cellValuesToUpdate[selectedCellId] = numberToFill
+        cellValues.value = cellValuesToUpdate
+        return true
+    }
+
+    fun undo() {
+        val undoStack = undoStackLiveData.value ?: ArrayDeque()
+        if (undoStack.isEmpty()) {
+            return
+        }
+
+        val lastEditEvent = undoStack.removeLast()
+        undoStackLiveData.value = undoStack
+        if (lastEditEvent.eventType == EditEventType.FILL) {
+            if (lastEditEvent.valueType == EditValueType.MAIN_CELL_NUMBER) {
+                if (!fillMainCellNumber(lastEditEvent.cellId, lastEditEvent.oldValue ?: 0)) {
+                    return
+                }
+            } else if (lastEditEvent.valueType == EditValueType.CANDIDATE_NUMBER) {
+                if (!deleteCandidateNumber(lastEditEvent.cellId, lastEditEvent.value)) {
+                    return
+                }
+            }
+        }
+
+        val redoStack = redoStackLiveData.value ?: ArrayDeque()
+        redoStack.addLast(lastEditEvent)
+        redoStackLiveData.value = redoStack
+    }
+
+    fun redo() {
+        val redoStack = redoStackLiveData.value ?: ArrayDeque()
+        if (redoStack.isEmpty()) {
+            return
+        }
+
+        val lastEditEvent = redoStack.removeLast()
+        redoStackLiveData.value = redoStack
+        if (lastEditEvent.eventType == EditEventType.FILL) {
+            if (lastEditEvent.valueType == EditValueType.MAIN_CELL_NUMBER) {
+                if (!fillMainCellNumber(lastEditEvent.cellId, lastEditEvent.value)) {
+                    return
+                }
+            } else if (lastEditEvent.valueType == EditValueType.CANDIDATE_NUMBER) {
+                if (!fillCandidateNumber(lastEditEvent.cellId, lastEditEvent.value)) {
+                    return
+                }
+            }
+        }
+
+        val undoStack = undoStackLiveData.value ?: ArrayDeque()
+        undoStack.addLast(lastEditEvent)
+        undoStackLiveData.value = undoStack
     }
 
     fun isSameNumberAsSelectedCell(cellId: Int): Boolean {
