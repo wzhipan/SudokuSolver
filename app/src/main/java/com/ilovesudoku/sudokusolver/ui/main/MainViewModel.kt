@@ -123,7 +123,7 @@ class MainViewModel : ViewModel() {
     }
 
     private fun fillCandidateNumber(selectedCellId: Int, numberToFill: Int): Boolean {
-        if (selectedCellId in 0..80) {
+        if (selectedCellId in 0..80 && !selectedCellHasMainCellNumber()) {
             val candidateNumbers =
                 candidateValues[selectedCellId].value ?: BooleanArray(9) { false }
             // no need to fill if the candidate number is already set
@@ -221,5 +221,10 @@ class MainViewModel : ViewModel() {
         return selectedCellId != cellId && cellValues.value?.get(cellId) == cellValues.value?.get(
             selectedCellId
         )
+    }
+
+    fun selectedCellHasMainCellNumber(): Boolean {
+        val selectedCellId = selectedCell.value
+        return selectedCellId == null || cellValues.value?.get(selectedCellId) != 0
     }
 }
