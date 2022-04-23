@@ -34,6 +34,7 @@ class MainFragment : Fragment() {
         setupNotesTakingButton(view)
         setupUndoButton(view)
         setupRedoButton(view)
+        setupDeleteButton(view)
     }
 
     private fun assignIdsToCells(view: View) {
@@ -104,6 +105,12 @@ class MainFragment : Fragment() {
             redoButton.isEnabled = !it.isEmpty()
         }
         redoButton.setOnClickListener { viewModel.redo() }
+    }
+
+    private fun setupDeleteButton(view: View) {
+        val viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        val deleteButton = (view.findViewById<Button>(R.id.delete_button))
+        deleteButton.setOnClickListener { viewModel.delete() }
     }
 
 }

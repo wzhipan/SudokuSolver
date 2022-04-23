@@ -96,8 +96,7 @@ class MainViewModel : ViewModel() {
             if (fillCandidateNumber(selectedCellId, numberClicked)) {
                 addUndoEvent(
                     EditEvent(
-                        EditEventType.FILL,
-                        EditValueType.CANDIDATE_NUMBER,
+                        EditEventType.FILL_CANDIDATE_NUMBER,
                         selectedCellId,
                         numberClicked
                     )
@@ -108,8 +107,7 @@ class MainViewModel : ViewModel() {
             if (fillMainCellNumber(selectedCellId, numberClicked)) {
                 addUndoEvent(
                     EditEvent(
-                        EditEventType.FILL,
-                        EditValueType.MAIN_CELL_NUMBER,
+                        EditEventType.FILL_MAIN_CELL_NUMBER,
                         selectedCellId,
                         numberClicked,
                         oldValue
@@ -127,38 +125,70 @@ class MainViewModel : ViewModel() {
         redoStackLiveData.value = ArrayDeque()
     }
 
-    private fun fillCandidateNumber(selectedCellId: Int, numberToFill: Int): Boolean {
-        if (selectedCellId in 0..80 && !selectedCellHasMainCellNumber()) {
-            val candidateNumbers =
-                candidateValues[selectedCellId].value ?: BooleanArray(9) { false }
-            // no need to fill if the candidate number is already set
-            if (candidateNumbers[numberToFill - 1]) {
-                return false
-            }
-            candidateNumbers[numberToFill - 1] = true
-            candidateValues[selectedCellId].value = candidateNumbers
-            return true
+    private fun fillCandidateNumber(selectedCellId: Int, numberToFill: Int?): Boolean {
+        if (selectedCellId !in 0..80 || numberToFill == null || selectedCellHasMainCellNumber()) {
+            return false
         }
-        return false
+        val candidateNumbers =
+            candidateValues[selectedCellId].value ?: BooleanArray(9) { false }
+        // no need to fill if the candidate number is already set
+        if (candidateNumbers[numberToFill - 1]) {
+            return false
+        }
+        candidateNumbers[numberToFill - 1] = true
+        candidateValues[selectedCellId].value = candidateNumbers
+        return true
     }
 
-    private fun deleteCandidateNumber(selectedCellId: Int, numberToDelete: Int): Boolean {
-        if (selectedCellId in 0..80) {
-            val candidateNumbers =
-                candidateValues[selectedCellId].value ?: return false
-            // no need to delete if the candidate number is not set
-            if (!candidateNumbers[numberToDelete - 1]) {
-                return false
-            }
-            candidateNumbers[numberToDelete - 1] = false
-            candidateValues[selectedCellId].value = candidateNumbers
-            return true
+    private fun deleteCandidateNumber(selectedCellId: Int, numberToDelete: Int?): Boolean {
+        if (selectedCellId !in 0..80 || numberToDelete == null) {
+            return false
         }
-        return false
+        val candidateNumbers =
+            candidateValues[selectedCellId].value ?: return false
+        // no need to delete if the candidate number is not set
+        if (!candidateNumbers[numberToDelete - 1]) {
+            return false
+        }
+        candidateNumbers[numberToDelete - 1] = false
+        candidateValues[selectedCellId].value = candidateNumbers
+        return true
     }
 
-    private fun fillMainCellNumber(selectedCellId: Int, numberToFill: Int): Boolean {
+    private fun fillCandidateNumbers(
+        selectedCellId: Int,
+        candidateNumbers: BooleanArray?
+    ): BooleanArray? {
+        if (selectedCellId !in 0..80 || candidateNumbers == null) {
+            return null
+        }
+        val oldCandidateNumbers = candidateValues[selectedCellId].value
+        // no need to fill if the candidate numbers are the same
+        if (oldCandidateNumbers == null || oldCandidateNumbers.contentEquals(candidateNumbers)) {
+            return null
+        }
+        // this line is needed to avoid the type warning on newCandidateNumbers below
+        val newCandidateNumbers: BooleanArray = candidateNumbers
+        candidateValues[selectedCellId].value = newCandidateNumbers
+        return oldCandidateNumbers
+    }
+
+    private fun deleteCandidateNumbers(selectedCellId: Int): BooleanArray? {
         if (selectedCellId !in 0..80) {
+            return null
+        }
+        val candidateNumbers =
+            candidateValues[selectedCellId].value ?: return null
+        // no need to delete if the candidate number is not set
+        if (candidateNumbers.all { !it }) {
+            return null
+        }
+        candidateValues[selectedCellId].value = BooleanArray(9) {false}
+        return candidateNumbers
+    }
+
+    private fun fillMainCellNumber(selectedCellId: Int, numberToFill: Int?): Boolean {
+        if (selectedCellId !in 0..80 || numberToFill == null) {
             return false
         }
         val cellValuesToUpdate = cellValues.value ?: return false
@@ -179,13 +209,28 @@ class MainViewModel : ViewModel() {
 
         val lastEditEvent = undoStack.removeLast()
         undoStackLiveData.value = undoStack
-        if (lastEditEvent.eventType == EditEventType.FILL) {
-            if (lastEditEvent.valueType == EditValueType.MAIN_CELL_NUMBER) {
-                if (!fillMainCellNumber(lastEditEvent.cellId, lastEditEvent.oldValue ?: 0)) {
+
+        when (lastEditEvent.eventType) {
+            EditEventType.FILL_MAIN_CELL_NUMBER -> {
+                if (!fillMainCellNumber(
+                        lastEditEvent.cellId,
+                        lastEditEvent.oldMainCellValue ?: 0
+                    )
+                ) {
                     return
                 }
-            } else if (lastEditEvent.valueType == EditValueType.CANDIDATE_NUMBER) {
+            }
+            EditEventType.FILL_CANDIDATE_NUMBER -> {
                 if (!deleteCandidateNumber(lastEditEvent.cellId, lastEditEvent.value)) {
+                    return
+                }
+            }
+            EditEventType.DELETE_CANDIDATE_NUMBERS -> {
+                if (fillCandidateNumbers(
+                        lastEditEvent.cellId,
+                        lastEditEvent.oldCandidateValues
+                    ) == null
+                ) {
                     return
                 }
             }
@@ -204,13 +249,19 @@ class MainViewModel : ViewModel() {
 
         val lastEditEvent = redoStack.removeLast()
         redoStackLiveData.value = redoStack
-        if (lastEditEvent.eventType == EditEventType.FILL) {
-            if (lastEditEvent.valueType == EditValueType.MAIN_CELL_NUMBER) {
+        when (lastEditEvent.eventType) {
+            EditEventType.FILL_MAIN_CELL_NUMBER -> {
                 if (!fillMainCellNumber(lastEditEvent.cellId, lastEditEvent.value)) {
                     return
                 }
-            } else if (lastEditEvent.valueType == EditValueType.CANDIDATE_NUMBER) {
+            }
+            EditEventType.FILL_CANDIDATE_NUMBER -> {
                 if (!fillCandidateNumber(lastEditEvent.cellId, lastEditEvent.value)) {
+                    return
+                }
+            }
+            EditEventType.DELETE_CANDIDATE_NUMBERS -> {
+                if (deleteCandidateNumbers(lastEditEvent.cellId) == null) {
                     return
                 }
             }
@@ -244,5 +295,36 @@ class MainViewModel : ViewModel() {
     fun setSelectedCell(cellId: Int) {
         selectedCell.value = cellId
         isNumPadEnabled.value = cellEditable[cellId]
+    }
+
+    fun delete() {
+        val selectedCellId = selectedCell.value ?: return
+        if (!cellEditable[selectedCellId]) return
+        val oldValue = cellValues.value?.get(selectedCellId)
+        if (oldValue != null && oldValue != 0) {
+            if (fillMainCellNumber(selectedCellId, 0)) {
+                addUndoEvent(
+                    EditEvent(
+                        EditEventType.FILL_MAIN_CELL_NUMBER,
+                        selectedCellId,
+                        0,
+                        oldValue
+                    )
+                )
+            }
+        } else {
+            val oldCandidateNumbers = deleteCandidateNumbers(selectedCellId)
+            if (oldCandidateNumbers != null) {
+                addUndoEvent(
+                    EditEvent(
+                        EditEventType.DELETE_CANDIDATE_NUMBERS,
+                        selectedCellId,
+                        null,
+                        null,
+                        oldCandidateNumbers
+                    )
+                )
+            }
+        }
     }
 }

@@ -13,4 +13,5 @@
     <string name="notes_button_text">Notes</string>
     <string name="undo_button_text">Undo</string>
     <string name="redo_button_text">Redo</string>
+    <string name="delete_button_text">Delete</string>
 </resources>

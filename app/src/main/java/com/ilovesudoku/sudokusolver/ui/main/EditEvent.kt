@@ -1,19 +1,15 @@
 package com.ilovesudoku.sudokusolver.ui.main
 
 enum class EditEventType {
-    FILL,
-    DELETE,
+    FILL_MAIN_CELL_NUMBER,
+    FILL_CANDIDATE_NUMBER,
+    DELETE_CANDIDATE_NUMBERS,
 }
 
-enum class EditValueType {
-    MAIN_CELL_NUMBER,
-    CANDIDATE_NUMBER,
-}
-
-data class EditEvent(
+class EditEvent(
     val eventType: EditEventType,
-    val valueType: EditValueType,
     val cellId: Int,
-    val value: Int,
-    val oldValue: Int? = null
+    val value: Int?,
+    val oldMainCellValue: Int? = null,
+    val oldCandidateValues: BooleanArray? = null,
 )

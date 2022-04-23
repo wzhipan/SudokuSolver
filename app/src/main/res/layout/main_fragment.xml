@@ -109,6 +109,12 @@
             android:text="@string/redo_button_text" />
 
         <Button
+            android:id="@+id/delete_button"
+            style="@style/action_button_style"
+            android:drawableTop="@drawable/ic_baseline_cleaning_services_24"
+            android:text="@string/delete_button_text" />
+
+        <Button
             android:id="@+id/note_taking_state_button"
             style="@style/action_button_style"
             android:drawableTop="@drawable/ic_baseline_edit_off_24"
