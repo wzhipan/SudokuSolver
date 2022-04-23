@@ -118,7 +118,7 @@ class CellView(context: Context, attrs: AttributeSet?) :
         mainCellTextView.setTextColor(
             resources.getColor(
                 textColorResId,
-                null
+                context?.theme
             )
         )
     }
@@ -129,7 +129,7 @@ class CellView(context: Context, attrs: AttributeSet?) :
                 setBackgroundColor(
                     resources.getColor(
                         R.color.cell_selected_background,
-                        null
+                        context?.theme
                     )
                 )
             }
@@ -137,7 +137,7 @@ class CellView(context: Context, attrs: AttributeSet?) :
                 setBackgroundColor(
                     resources.getColor(
                         R.color.related_cell_selected_background_color,
-                        null
+                        context?.theme
                     )
                 )
             }

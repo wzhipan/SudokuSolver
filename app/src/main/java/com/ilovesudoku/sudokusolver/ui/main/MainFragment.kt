@@ -78,7 +78,7 @@ class MainFragment : Fragment() {
                 ResourcesCompat.getDrawable(
                     resources,
                     if (it) R.drawable.ic_baseline_edit_24 else R.drawable.ic_baseline_edit_off_24,
-                    null
+                    context?.theme
                 ),
                 null /* right */,
                 null /*bottom */
