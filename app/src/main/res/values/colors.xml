@@ -11,10 +11,10 @@
     <color name="candidate_number_color">#FF888888</color>
     <color name="key_pad_number_color">@color/black</color>
     <color name="cell_selected_background">#663297FD</color>
-    <color name="error_number_used_by_related_cell_text_color">#FFDD1822</color>
+    <color name="error_number_used_by_related_cell_text_color">#FFFF160C</color>
     <color name="related_cell_selected_background_color">#66AFEEEE</color>
-    <color name="editable_cell_text_color">#FF018786</color>
+    <color name="editable_cell_text_color">#FF00569D</color>
     <color name="uneditable_cell_text_color">@color/black</color>
     <color name="action_button_text_color">#FF444444</color>
-    <color name="same_number_as_selected_cell_text_color">#FF18AA22</color>
+    <color name="same_number_as_selected_cell_text_color">#FFFDA50F</color>
 </resources>
